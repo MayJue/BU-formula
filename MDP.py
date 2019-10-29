@@ -3,7 +3,7 @@ import random
 class MDP():
 
     def __init__( self, grid ):
-
+        print("init")
         ## In this assignment, there is one state per space in the grid.
         ## It is not required that you explicitly represent the states, but
         ## you may.  You are also given the transition probabilities.  Since
@@ -16,18 +16,22 @@ class MDP():
 
         ## Set of possible actions
         self.A = ['^', 'v', '>', '<']
-
+        self.gama = .99 #gama
         ## An attribute to store state utility values.  You do not have to use
         ## a dictionary, but it helps keep the code clear.
         self.U = dict()
 
     def T( self, s, a, sprime ):
+        print("T")
+
+        if
 
         ## Return the probability of moving to state sprime after taking action
         ## a in state s.  If sprime is unreachable from s, return 0.
 
     def value_iteration( self ):
-
+        print("self")
+        UpdateS = CurrReward + self.gama * max( (T(s, "up", spri)),(T(s, "down", spri)),(T(s, "right", spri)),(T(s, "left", spri)))
         ## The value iteration algorithm.  You may use any value for gamma
         ## between 0 and 1 (typically set to something like 0.99).  The number
         ## of updates to carry out is not fixed, but you must run until the
@@ -39,6 +43,14 @@ class MDP():
         ## whether it is less than epsilon.
 
     def get_policy( self ):
-
+        print("policy")
         ## Use the attribute self.U to determine the appropriate policy, and
         ## return a grid the same size as the input
+
+list = [[10,1,-5],
+        [-4,6,8],
+        [0,6,-7]]
+
+M = MDP(list)
+M.value_iteration()
+print( M.get_policy() )
