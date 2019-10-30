@@ -19,19 +19,28 @@ class MDP():
         self.gama = .99 #gama
         ## An attribute to store state utility values.  You do not have to use
         ## a dictionary, but it helps keep the code clear.
-        self.U = dict()
+        self.U = []
+        for i in range(len(grid)):
+            row = []
+            for j in range(len(grid[i])):
+                row.append(0)
+            self.U.append(row)
+        for i in self.U:
+            print(i)
 
     def T( self, s, a, sprime ):
         print("T")
 
-        if
 
         ## Return the probability of moving to state sprime after taking action
         ## a in state s.  If sprime is unreachable from s, return 0.
 
     def value_iteration( self ):
         print("self")
-        UpdateS = CurrReward + self.gama * max( (T(s, "up", spri)),(T(s, "down", spri)),(T(s, "right", spri)),(T(s, "left", spri)))
+        for i in range(len(self.U)):
+            for j in range(len(self.U[i])):
+                self.U[i][j] = self.U[i][j] + self.gama * max(self[i][j])
+                #CurrReward + self.gama * max( (T(s, "up", spri)),(T(s, "down", spri)),(T(s, "right", spri)),(T(s, "left", spri)))
         ## The value iteration algorithm.  You may use any value for gamma
         ## between 0 and 1 (typically set to something like 0.99).  The number
         ## of updates to carry out is not fixed, but you must run until the
