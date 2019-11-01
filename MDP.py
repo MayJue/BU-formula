@@ -28,9 +28,20 @@ class MDP():
         for i in self.U:
             print(i)
 
-    def T( self, s, a, sprime ):
+    def T( self, s, a):#, sprime ):
         print("T")
-
+        if a == '^':
+            print(a)
+            return 1
+        elif a == '<':
+            print(a)
+            return 1
+        elif a == '>':
+            print(a)
+            return 1
+        elif a == 'v':
+            print(a)
+            return 2
 
         ## Return the probability of moving to state sprime after taking action
         ## a in state s.  If sprime is unreachable from s, return 0.
@@ -39,7 +50,11 @@ class MDP():
         print("self")
         for i in range(len(self.U)):
             for j in range(len(self.U[i])):
-                self.U[i][j] = self.U[i][j] + self.gama * max(self[i][j])
+                # self.U[i][j] = self.U[i][j] + self.gama * max(self.T(self.U[i][j], a for a in self.A))
+                self.U[i][j] = self.U[i][j] + self.gama * max(self.T(self.U[i][j],'^'),self.T(self.U[i][j],'v'),self.T(self.U[i][j],'<'),self.T(self.U[i][j],'>'))
+
+
+
                 #CurrReward + self.gama * max( (T(s, "up", spri)),(T(s, "down", spri)),(T(s, "right", spri)),(T(s, "left", spri)))
         ## The value iteration algorithm.  You may use any value for gamma
         ## between 0 and 1 (typically set to something like 0.99).  The number
@@ -52,13 +67,14 @@ class MDP():
         ## whether it is less than epsilon.
 
     def get_policy( self ):
+        print(self.U)
         print("policy")
         ## Use the attribute self.U to determine the appropriate policy, and
         ## return a grid the same size as the input
 
-list = [[10,1,-5],
-        [-4,6,8],
-        [0,6,-7]]
+list = [[0,0,10],
+        [0,-1,0],
+        [0,-1,0]]
 
 M = MDP(list)
 M.value_iteration()
