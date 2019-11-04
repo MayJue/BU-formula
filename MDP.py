@@ -5,119 +5,101 @@ class MDP():
     def __init__( self, grid ):
         print("init")
         self.G = grid
-
-        ## In this assignment, there is one state per space in the grid.
-        ## It is not required that you explicitly represent the states, but
-        ## you may.  You are also given the transition probabilities.  Since
-        ## the number of states is not constant (we will use different inputs),
-        ## you may use a function (stub below) to calculate them.  For instance,
-        ## if you start in a state on the left edge of the grid and move left,
-        ## your program should realize that the agent should stay in the same
-        ## state as a result.  The rewards for your MDP are contained in the
-        ## input.
-
-        ## Set of possible actions
         self.A = ['^', 'v', '>', '<']
-        self.gama = .99 #gama
-        ## An attribute to store state utility values.  You do not have to use
-        ## a dictionary, but it helps keep the code clear.
+        self.gama = .9
         self.U = []
         for i in range(len(grid)):
             row = []
             for j in range(len(grid[i])):
                 row.append(0)
             self.U.append(row)
-        for i in self.G:
-            print(i)
+        self.policy = []
 
-    def T( self, i, j, a):#, sprime ):
-        print(a, i, j)
-        try:
-            up = {self.G[i+1][j]: 1, self.G[i-1][j]: 7, self.G[i][j+1]: 1, self.G[i][j-1]: 1}
-            down = {self.G[i+1][j]: 7, self.G[i-1][j]: 1, self.G[i][j+1]: 1, self.G[i][j-1]: 1}
-            left = {self.G[i+1][j]: 1, self.G[i-1][j]: 1, self.G[i][j+1]: 1, self.G[i][j-1]: 7}
-            right = {self.G[i+1][j]: 1, self.G[i-1][j]: 1, self.G[i][j+1]: 7, self.G[i][j-1]: 1}
-            print(self.G[i-1][j], "G")
-            print(i-1, j, self.G[-2][0])
-            dir =  {'^': random.choice([x for x in up for y in range(up[x])]),
-                    'v': random.choice([x for x in down for y in range(down[x])]),
-                    '<': random.choice([x for x in left for y in range(left[x])]),
-                    '>': random.choice([x for x in right for y in range(right[x])])}
-            print('this is ^', dir.get('^'))
-            x = dir.get(a)
-            print(x)
+    def up(self, i, j):
+        if i-1 == -1:
+            x = self.U[i][j]
             return (x)
-        except IndexError as error:
-            print('exception ', self.G[i][j])
-            return(self.G[i][j])
-        # chance = random.randrange(1, 11)
-        # if a == '^':
-        #     if chance < 8:
-        #         try:
-        #             return(self.U[i+1][j])
-        #         except:
-        #             return(self.U[i][j])
-        #     elif chance == 8 :
-        #         try:
-        #             return(self.U[i-1][j])
-        #         except:
-        #             return(self.U[i][j])
-        #     elif chance == 9 :
-        #         try:
-        #             return(self.U[i][j+1])
-        #         except:
-        #             return(self.U[i][j])
-        #     elif chance == 10 :
-        #         try:
-        #             return(self.U[i-1][j-1])
-        #         except:
-        #             return(self.U[i][j])
-        # elif a == '<':
-        #
-        #     return 1
-        # elif a == '>':
-        #
-        #     return 1
-        # elif a == 'v':
-        #
-        #     return 2
+        try:
+            x = self.U[i-1][j]
+            return (x)
+        except:
+            u = self.U[i][j]
+            return()
+    def left(self, i, j):
+        if j-1 == -1:
+            x = self.U[i][j]
+            return (x)
+        try:
+            x = self.U[i][j-1]
+            return (x)
+        except:
+            u = self.U[i][j]
+            return(u)
 
-        ## Return the probability of moving to state sprime after taking action
-        ## a in state s.  If sprime is unreachable from s, return 0.
+    def down(self, i, j):
+        try:
+            x = self.U[i+1][j]
+            return (x)
+        except:
+            u = self.U[i][j]
+            return(u)
+
+    def right(self, i, j):
+        try:
+            x = self.U[i][j+1]
+            return(x)
+        except:
+            u = self.U[i][j]
+            return(u)
+
+
+
+    def expectedValue( self, i, j, a):#, sprime ):
+        # print(a, i, j)
+
+
+        up = self.up(i, j)*.7+ self.down(i, j)*.1+ self.left(i, j)*.1+ self.right(i, j)*.1
+        down = self.up(i, j)*.1+ self.down(i, j)*.7+ self.left(i, j)*.1+ self.right(i, j)*.1
+        left = self.up(i, j)*.1+ self.down(i, j)*.1+ self.left(i, j)*.7+ self.right(i, j)*.1
+        right = self.up(i, j)*.1+ self.down(i, j)*.1+ self.left(i, j)*.1+ self.right(i, j)*.7
+
+        dir = {'^': up,
+                'v': down,
+                '<': left,
+                '>': right}
+        reward = dir.get(a)
+        return(reward)
+
 
     def value_iteration( self ):
-        print("self")
-        for i in range(len(self.U)):
-            for j in range(len(self.U[i])):
-                # self.U[i][j] = self.U[i][j] + self.gama * max(self.T(self.U[i][j], a for a in self.A))
-                self.U[i][j] = self.U[i][j] + self.gama * max(self.T(i,j,'^'),self.T(i,j,'v'),self.T(i,j,'<'),self.T(i,j,'>'))
-
-
-
-                #CurrReward + self.gama * max( (T(s, "up", spri)),(T(s, "down", spri)),(T(s, "right", spri)),(T(s, "left", spri)))
-        ## The value iteration algorithm.  You may use any value for gamma
-        ## between 0 and 1 (typically set to something like 0.99).  The number
-        ## of updates to carry out is not fixed, but you must run until the
-        ## resulting policy converges and stops changing.  You can do this by
-        ## iterating until the utility values stop changing by much.  Usually,
-        ## this is accomplished by setting some parameter epsilon (small value,
-        ## on the order of .1, .01, etc.), summing up the differences between
-        ## state utility values before and after the update, and checking
-        ## whether it is less than epsilon.
-
+        for i in range(10):
+            for i in range(len(self.U)):
+                for j in range(len(self.U[i])):
+                    # self.U[i][j] = self.U[i][j] + self.gama * max(self.expectedValue(i,j,[a for a in self.A]))
+                    self.U[i][j] = self.G[i][j] + (self.gama * max(self.expectedValue(i,j,'^'),self.expectedValue(i,j,'v'),self.expectedValue(i,j,'<'),self.expectedValue(i,j,'>')))
+                    # print('myreward', self.U[i][j])
+                for i in self.U:
+                    print(i)
+                print('\n')
     def get_policy( self ):
         print(self.U)
-        print("policy")
-        ## Use the attribute self.U to determine the appropriate policy, and
-        ## return a grid the same size as the input
+        for i in range(len(self.U)):
+            dic = {}
+            row = []
+            for j in range(len(self.U[1])):
+                dic.update({'^ ' :self.up(i, j)})
+                dic.update({'< ' :self.left(i, j)})
+                dic.update({'> ' :self.right(i, j)})
+                dic.update({'v ' :self.down(i, j)})
+                x = max(dic, key=dic.get)
+                row.append(x)
+            self.policy.append(row)
+        print(self.policy)
 
-list = [[1,2,3],
-        [4,5,6],
-        [7,8,9]]
 
-        # [[0,0,10],
-        # [0,-1,0],
-        # [0,-1,0]]
+list = [[0,0,10],
+        [0,-1,0],
+        [0,-1,0]]
 
 
 M = MDP(list)
