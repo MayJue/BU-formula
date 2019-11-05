@@ -57,7 +57,6 @@ class MDP():
     def expectedValue( self, i, j, a):#, sprime ):
         # print(a, i, j)
 
-
         up = self.up(i, j)*.7+ self.down(i, j)*.1+ self.left(i, j)*.1+ self.right(i, j)*.1
         down = self.up(i, j)*.1+ self.down(i, j)*.7+ self.left(i, j)*.1+ self.right(i, j)*.1
         left = self.up(i, j)*.1+ self.down(i, j)*.1+ self.left(i, j)*.7+ self.right(i, j)*.1
@@ -72,29 +71,26 @@ class MDP():
 
 
     def value_iteration( self ):
-        for i in range(10):
+        for i in range(1):
             for i in range(len(self.U)):
                 for j in range(len(self.U[i])):
                     # self.U[i][j] = self.U[i][j] + self.gama * max(self.expectedValue(i,j,[a for a in self.A]))
                     self.U[i][j] = self.G[i][j] + (self.gama * max(self.expectedValue(i,j,'^'),self.expectedValue(i,j,'v'),self.expectedValue(i,j,'<'),self.expectedValue(i,j,'>')))
-                    # print('myreward', self.U[i][j])
-                for i in self.U:
-                    print(i)
-                print('\n')
+                    
     def get_policy( self ):
         print(self.U)
         for i in range(len(self.U)):
             dic = {}
             row = []
-            for j in range(len(self.U[1])):
-                dic.update({'^ ' :self.up(i, j)})
-                dic.update({'< ' :self.left(i, j)})
-                dic.update({'> ' :self.right(i, j)})
-                dic.update({'v ' :self.down(i, j)})
+            for j in range(len(self.U[i])):
+                dic.update({'^' :self.up(i, j)})
+                dic.update({'<' :self.left(i, j)})
+                dic.update({'>' :self.right(i, j)})
+                dic.update({'v' :self.down(i, j)})
                 x = max(dic, key=dic.get)
                 row.append(x)
             self.policy.append(row)
-        print(self.policy)
+        return(self.policy)
 
 
 list = [[0,0,10],
